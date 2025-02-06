@@ -7,3 +7,12 @@ function connectDb(): PDO { //pdo is php extension used to connect to different 
 
     return $pdo;
 }
+
+function loadSchema(PDO $pdo, string $schemaFile): void{
+    $sql = file_get_contents($schemaFile);
+    if(false === $sql){
+        die("Failed to load schema from file: $schemaFile.");
+    }
+    $pdo->exec($sql);
+    echo "Schema loaded successfully.\n";
+}
