@@ -1,0 +1,10 @@
+{
+    "name": "gdb/blog-oop-and-custom-framework",
+    "autoload": {
+        "psr-4":{
+            "App\\": "app/",
+            "Core\\": "core/"
+        }
+    },
+    "require": {}
+}
