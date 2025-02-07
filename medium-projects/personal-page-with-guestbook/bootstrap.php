@@ -15,3 +15,4 @@ const DB_DIR = __DIR__ . '/db';
 require_once INCLUDES_DIR . '/router.php';
 require_once INCLUDES_DIR . '/view.php';
 require_once INCLUDES_DIR . '/db.php';
+require_once INCLUDES_DIR . '/flash.php';
