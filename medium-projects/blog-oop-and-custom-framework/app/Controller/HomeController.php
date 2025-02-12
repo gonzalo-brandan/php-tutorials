@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use Core\View;
+use Exception;
 
 class HomeController {
   public function index() {

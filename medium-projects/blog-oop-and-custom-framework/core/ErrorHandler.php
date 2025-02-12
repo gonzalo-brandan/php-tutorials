@@ -8,11 +8,38 @@ class ErrorHandler {
         //php bin/load_schema.php
         // Check if the script is running in the CLI context
         if(php_sapi_name() === 'cli'){
+            static::logError($exception);
             // Render error specifically for the CLI environment
             static::renderCliError($exception);
         } else {
-            //static::renderErrorPage($exception);
+            static::renderErrorPage($exception);
         }
+    }
+
+    private static function renderErrorPage(\Throwable $exception): void {
+        // Get the debug flag from configuration
+        $isDebug = App::get('config')['app']['debug'] ?? false;
+
+        // If debug mode is enabled, show detailed error message and stack trace
+        if($isDebug){
+            $errorMessage = static::formatErrorMessage(
+                $exception,
+                "[%s] Error: %s: %s in %s on line %d\n"
+            );
+            $trace = $exception->getTraceAsString();
+        // In non-debug mode, show a more generic error message
+        } else {
+            $errorMessage = "[%s] An unexpected error occurred\n";
+            $trace = "";
+        }
+
+        http_response_code(500);
+        echo View::render('errors/500', [
+            'errorMessage' => $errorMessage,
+            'trace' => $trace,
+            'isDebug' => $isDebug
+        ], 'layouts/main');
+        exit();
     }
 
     // Method to format and display errors in the CLI
@@ -47,6 +74,14 @@ class ErrorHandler {
         static::handleException($exception);
     }
     
+    private static function logError(\Throwable $exception): void{
+        $logMessage = static::formatErrorMessage(
+            $exception,
+            "[%s] Error: %s: %s in %s on line %d\n"
+        );
+        error_log($logMessage, 3, __DIR__ . '/../logs/error.log');
+    }
+
     // Helper method to format the error message in a standard format
     private static function formatErrorMessage(\Throwable $exception, string $format): string{
         return sprintf(
