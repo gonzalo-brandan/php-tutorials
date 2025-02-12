@@ -40,7 +40,19 @@ abstract class Model {
      * @return static A new model instance.
      */
     public static function create(array $data): static{
-        
+        $db = App::get('database');
+        //1. Get the names of columns inside $data
+        $columns = implode(', ', array_keys($data));
+        //-> id, title, created_at, content
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
+        //-> ?, ?, ?, ?
+        // 3. Prepare the SQL query
+        $sql = "INSERT INTO " . static::$table . " ($columns) VALUES ($placeholders)";
+        // 4. Execute the query with the actual data
+        $db->query($sql, array_values($data));
+
+        // 5. Return the newly created object by finding it with the last insert ID
+        return static::find($db->lastInsertId());
     }
     //the job of createFromArray() will be converting an array result
     //with the DB record into a model object like Post,Comment or User
