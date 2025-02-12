@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use PDO;
+
 abstract class Model {
     // Each model (e.g., Post, Comment, User) should define its own table name
     protected static $table;
