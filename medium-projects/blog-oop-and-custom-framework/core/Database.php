@@ -1,5 +1,12 @@
 <?php
 
+namespace Core;
+
+use Exception;
+use PDO;
+use PDOException;
+use PDOStatement;
+
 class Database {
     protected $pdo;
 
@@ -22,8 +29,8 @@ class Database {
 
         return match($driver){
             'sqlite' => "sqlite:$dbname",
-            default => throw new Exception("Unsopoported DB driver: $driver");
-        }
+            default => throw new Exception("Unsopoported DB driver: $driver")
+        };
     }
 
     public function query(string $sql, array $params = []): PDOStatement {
