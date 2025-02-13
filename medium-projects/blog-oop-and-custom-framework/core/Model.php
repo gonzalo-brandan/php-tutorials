@@ -15,10 +15,7 @@ abstract class Model {
     public static function all(): array{
         $db = App::get('database');
         // Fetch all records from the associated table
-        $results = $db->query("SELECT * FROM " . static::$table)
-        ->fetchAll(PDO::FETCH_ASSOC);
-        // Convert each record array into a model instance
-        return array_map([static::class, 'createFromArray'], $results);
+        return $db->fetchAll("SELECT * FROM " . static::$table, [], static::class);
     }
 
     /**
@@ -29,10 +26,7 @@ abstract class Model {
     public static function find(mixed $id): static | null{
         $db = App::get('database');
         // Fetch a single record by ID
-        $result = $db->query("SELECT * FROM " . static::$table . " WHERE id = ?", [$id])
-        ->fetch(PDO::FETCH_ASSOC);
-        // Convert the record into a model instance or return null if not found
-        return $result ? static::createFromArray($result) : null;
+        return $db->fetch("SELECT * FROM " . static::$table . " WHERE id = ?", [$id], static::class);
     }
 
     /**

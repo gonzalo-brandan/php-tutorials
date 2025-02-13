@@ -1,26 +1,19 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\Post;
 use Core\View;
 use App\Models\User;
 
 class HomeController {
   public function index() {
-    User::create([
-      'name' => 'gonzalo',
-      'email' => 'gonzalo@gmail.com',
-      'role' => 'admin',
-      'password' => password_hash('admin123', PASSWORD_DEFAULT)
-    ]);
-    User::create([
-      'name' => 'daniel',
-      'email' => 'daniel@gmail.com',
-      'role' => 'admin',
-      'password' => password_hash('user123', PASSWORD_DEFAULT)
-    ]);
+    $posts = Post::getRecent(5);
+
     return View::render(
     template: 'home/index', 
-    data: ['message' => 'hello!'],
+    data: [
+      'posts' => $posts
+    ],
     layout: 'layouts/main');
   }
 }
